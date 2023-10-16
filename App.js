@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Button, TextInput } from "react-native";
 import { Calendar } from "react-native-calendars";
 import Modal from "react-native-modal";
-import { StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import I18n from "i18n-js";
-import HomeScreen from "./Home";
+import HomeScreen from "./Componentes/Home";
 import { ScrollView } from "react-native-web";
-import AnimatedBackgroundScreen from "./AnimatedBackgroundScreen";
-import AnimationVisible from './AnimationVisible';
+import AnimatedBackgroundScreen from "./style/AnimatedBackgroundScreen";
+import * as Animatable from "react-native-animatable";
 
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -17,7 +15,6 @@ const App = () => {
   const [eventText, setEventText] = useState("");
   const [lastPress, setLastPress] = useState(0);
   const [homeScreenVisible, setHomeScreenVisible] = useState(false);
-
 
   useEffect(() => {
     // Carrega os eventos do AsyncStorage quando o componente é montado
@@ -83,9 +80,6 @@ const App = () => {
     toggleModal();
   };
 
-
-
-
   return (
     <>
       <AnimatedBackgroundScreen />
@@ -102,11 +96,10 @@ const App = () => {
             },
           }}
         />
-
         {events[selectedDate] && (
-          
-          <Button title="Adicionar Mais Pessoas" onPress={showEvents} />
-          
+          <Animatable.View animation="fadeIn" duration={1000} delay={100}>
+            <Button title="Adicionar Mais Pessoas" onPress={showEvents} />
+          </Animatable.View>
         )}
 
         <Modal isVisible={isModalVisible}>
@@ -141,19 +134,27 @@ const App = () => {
         </Modal>
 
         {events[selectedDate] && (
-          <View style={{ flex: 1, alignItems: "center", marginTop: "20px" }}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              marginTop: "20px",
+              marginBottom: "15px",
+              fontFamily: "",
+            }}
+          >
             <Text>Folga em {selectedDate}:</Text>
             {events[selectedDate].map((event, index) => (
               <Text key={index}>{event}</Text>
             ))}
           </View>
         )}
-
-        <Button
-          title="Mostrar Ultimas Folgas Adicionadas"
-          onPress={() => setHomeScreenVisible(true)}
-       
-        />
+        <Animatable.View animation="bounceIn" duration={1000} delay={100}>
+          <Button
+            title="Mostrar Ultimas Folgas Adicionadas"
+            onPress={() => setHomeScreenVisible(true)}
+          />
+        </Animatable.View>
         {homeScreenVisible && <HomeScreen events={events} />}
       </ScrollView>
     </>
